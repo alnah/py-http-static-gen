@@ -1,4 +1,16 @@
+docstring-to-markdown==0.15
+jedi==0.19.2
 nodeenv==1.9.1
+packaging==24.2
+parso==0.8.4
+platformdirs==4.3.6
+pluggy==1.5.0
+pylsp-rope==0.1.17
 pyright==1.1.394
+python-lsp-jsonrpc==1.1.2
+python-lsp-server==1.12.2
+pytoolconfig==1.3.1
+rope==1.13.0
 ruff==0.9.6
 typing_extensions==4.12.2
+ujson==5.10.0
