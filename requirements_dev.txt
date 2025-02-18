@@ -1,0 +1,4 @@
+nodeenv==1.9.1
+pyright==1.1.394
+ruff==0.9.6
+typing_extensions==4.12.2
