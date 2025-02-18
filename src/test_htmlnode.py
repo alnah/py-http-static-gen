@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 
 
 class TestHTMLNode(unittest.TestCase):
@@ -89,4 +89,59 @@ class TestLeafNode(unittest.TestCase):
         leaf_node = LeafNode(tag="p", value="test")
         want = "<p>test</p>"
         got = leaf_node.to_html()
+        self.assertEqual(want, got)
+
+
+class TestParentNode(unittest.TestCase):
+    def test__init__optional_values(self):
+        parent_node = ParentNode(
+            tag="p",
+            children=[LeafNode(value="test", tag="b")],
+        )
+        self.assertEqual(parent_node.props, {})
+
+    def test__init__ensure_empty_value(self):
+        parent_node = ParentNode(
+            tag="p",
+            children=[LeafNode(value="test", tag="b")],
+        )
+        self.assertEqual(parent_node.value, "")
+
+    def test_to_html_with_children(self):
+        parent_node = ParentNode(
+            tag="p",
+            children=[
+                LeafNode(tag="b", value="bold"),
+                LeafNode(value="normal"),
+                LeafNode(tag="i", value="italic"),
+                LeafNode(value="normal"),
+            ],
+            props={"id": "p1"},
+        )
+        want = '<p id="p1"><b>bold</b>normal<i>italic</i>normal</p>'
+        got = parent_node.to_html()
+        self.assertEqual(want, got)
+
+    def test_to_html_with_grandchildren(self):
+        parent_node = ParentNode(
+            tag="div",
+            children=[
+                ParentNode(
+                    tag="p",
+                    children=[
+                        LeafNode(tag="b", value="bold"),
+                        LeafNode(value="normal"),
+                        LeafNode(tag="i", value="italic"),
+                        LeafNode(value="normal"),
+                    ],
+                    props={"id": "p1"},
+                ),
+            ],
+            props={"id": "div1"},
+        )
+
+        want = (
+            '<div id="div1"><p id="p1"><b>bold</b>normal<i>italic</i>normal</p></div>'
+        )
+        got = parent_node.to_html()
         self.assertEqual(want, got)

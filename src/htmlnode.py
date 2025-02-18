@@ -39,3 +39,27 @@ class LeafNode(HTMLNode):
         if self.tag == "":
             return self.value
         return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+
+
+class ParentNode(HTMLNode):
+    def __init__(
+        self,
+        tag: str,
+        children: list[HTMLNode],
+        props: Optional[dict[str, str]] = None,
+    ) -> None:
+        super().__init__(tag=tag, children=children, props=props)
+
+    def to_html(self) -> str:
+        def recursive_to_html(node: HTMLNode) -> str:
+            if isinstance(node, LeafNode):
+                return node.to_html()
+            elif isinstance(node, ParentNode):
+                children_html = "".join(
+                    recursive_to_html(child) for child in node.children
+                )
+                return f"<{node.tag}{node.props_to_html()}>{children_html}</{node.tag}>"
+            else:
+                return ""
+
+        return recursive_to_html(self)
