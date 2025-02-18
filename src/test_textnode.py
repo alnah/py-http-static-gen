@@ -11,7 +11,7 @@ class TestTextNode(unittest.TestCase):
         )
         self.assertEqual(text_node.url, "")
 
-    def test__eq__is_eq(self):
+    def test__eq__eq_node(self):
         text_node = TextNode(
             text="test",
             text_type=TextType.NORMAL,
@@ -50,7 +50,7 @@ class TestTextNode(unittest.TestCase):
         )
         self.assertNotEqual(text_node, other_text_node)
 
-    def test__eq_not_eq_url(self):
+    def test__eq__not_eq_url(self):
         text_node = TextNode(
             text="test",
             text_type=TextType.NORMAL,
@@ -63,7 +63,7 @@ class TestTextNode(unittest.TestCase):
         )
         self.assertNotEqual(text_node, other_text_node)
 
-    def test__repr_with_url(self):
+    def test__repr__with_url(self):
         text_node = TextNode(
             text="test",
             text_type=TextType.NORMAL,
@@ -73,7 +73,7 @@ class TestTextNode(unittest.TestCase):
         got = repr(text_node)
         self.assertEqual(want, got)
 
-    def test__repr_without_url(self):
+    def test__repr__without_url(self):
         text_node = TextNode(
             text="test",
             text_type=TextType.NORMAL,
