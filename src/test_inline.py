@@ -3,7 +3,7 @@ import unittest
 from inline import (
     extract_markdown_images,
     extract_markdown_links,
-    split_nodes_delimeter,
+    split_nodes_delimiter,
     split_nodes_image,
     split_nodes_link,
 )
@@ -14,7 +14,7 @@ class TestSplitNodesDelimeter(unittest.TestCase):
     def test_normal_text(self):
         old_nodes = [TextNode("This is a normal text", TextType.NORMAL)]
         want = old_nodes
-        got = split_nodes_delimeter(old_nodes, TextType.NORMAL)
+        got = split_nodes_delimiter(old_nodes, TextType.NORMAL)
         self.assertListEqual(want, got)
 
     def test_bold_text(self):
@@ -24,14 +24,14 @@ class TestSplitNodesDelimeter(unittest.TestCase):
             TextNode("bold", TextType.BOLD),
             TextNode(" text", TextType.NORMAL),
         ]
-        got = split_nodes_delimeter(old_nodes, TextType.BOLD, "**")
+        got = split_nodes_delimiter(old_nodes, TextType.BOLD, "**")
         self.assertListEqual(want, got)
 
     def test_italic_text(self):
-        for delimeter in ["*", "_"]:
+        for delimiter in ["*", "_"]:
             old_nodes = [
                 TextNode(
-                    f"This is an {delimeter}italic{delimeter} text",
+                    f"This is an {delimiter}italic{delimiter} text",
                     TextType.NORMAL,
                 )
             ]
@@ -40,7 +40,7 @@ class TestSplitNodesDelimeter(unittest.TestCase):
                 TextNode("italic", TextType.ITALIC),
                 TextNode(" text", TextType.NORMAL),
             ]
-            got = split_nodes_delimeter(old_nodes, TextType.ITALIC, delimeter)
+            got = split_nodes_delimiter(old_nodes, TextType.ITALIC, delimiter)
             self.assertListEqual(want, got)
 
     def test_code_text(self):
@@ -50,7 +50,7 @@ class TestSplitNodesDelimeter(unittest.TestCase):
             TextNode("code", TextType.CODE),
             TextNode(" text", TextType.NORMAL),
         ]
-        got = split_nodes_delimeter(old_nodes, TextType.CODE, "`")
+        got = split_nodes_delimiter(old_nodes, TextType.CODE, "`")
         self.assertListEqual(want, got)
 
     def test_mixed_text(self):
@@ -70,27 +70,27 @@ class TestSplitNodesDelimeter(unittest.TestCase):
             TextNode(", and ", TextType.NORMAL),
             TextNode("code", TextType.CODE),
         ]
-        bold_nodes = split_nodes_delimeter(old_nodes, TextType.BOLD, "**")
-        italic_nodes_1 = split_nodes_delimeter(bold_nodes, TextType.ITALIC, "*")
-        italic_nodes_2 = split_nodes_delimeter(italic_nodes_1, TextType.ITALIC, "_")
-        code_nodes = split_nodes_delimeter(italic_nodes_2, TextType.CODE, "`")
+        bold_nodes = split_nodes_delimiter(old_nodes, TextType.BOLD, "**")
+        italic_nodes_1 = split_nodes_delimiter(bold_nodes, TextType.ITALIC, "*")
+        italic_nodes_2 = split_nodes_delimiter(italic_nodes_1, TextType.ITALIC, "_")
+        code_nodes = split_nodes_delimiter(italic_nodes_2, TextType.CODE, "`")
         got = code_nodes
         self.assertListEqual(want, got)
 
     def test_invalid_text_type(self):
         old_nodes = [TextNode("This is a normal text", TextType.NORMAL)]
         with self.assertRaises(ValueError):
-            split_nodes_delimeter(old_nodes, TextType.LINK)
+            split_nodes_delimiter(old_nodes, TextType.LINK)
 
-    def test_invalid_delimeter(self):
+    def test_invalid_delimiter(self):
         old_nodes = [TextNode("This is a **bold** text", TextType.BOLD)]
         with self.assertRaises(ValueError):
-            split_nodes_delimeter(old_nodes, TextType.BOLD, "invalid")
+            split_nodes_delimiter(old_nodes, TextType.BOLD, "invalid")
 
-    def test_delimeter_not_match_text_type(self):
+    def test_delimiter_not_match_text_type(self):
         old_nodes = [TextNode("This is a **bold** text", TextType.BOLD)]
         with self.assertRaises(ValueError):
-            split_nodes_delimeter(old_nodes, TextType.ITALIC, "code")
+            split_nodes_delimiter(old_nodes, TextType.ITALIC, "code")
 
 
 class TestExtractLinks(unittest.TestCase):
@@ -149,7 +149,7 @@ class TestSplitNodesLink(unittest.TestCase):
                 "https://github.com/alnah/py-http-static-gen",
             ),
         ]
-        with_bold = split_nodes_delimeter([text_node], TextType.BOLD, "**")
+        with_bold = split_nodes_delimiter([text_node], TextType.BOLD, "**")
         got = split_nodes_link(with_bold)
         self.assertListEqual(want, got)
 
@@ -207,7 +207,7 @@ class TestSplitNodesImage(unittest.TestCase):
             TextNode(" and ", TextType.NORMAL),
             TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
         ]
-        with_bold = split_nodes_delimeter([text_node], TextType.BOLD, "**")
+        with_bold = split_nodes_delimiter([text_node], TextType.BOLD, "**")
         got = split_nodes_image(with_bold)
         self.assertListEqual(want, got)
 

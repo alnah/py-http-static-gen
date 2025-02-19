@@ -1,7 +1,7 @@
 from htmlnode import LeafNode
 from inline import (
-    get_delimeter_to_text_type,
-    split_nodes_delimeter,
+    get_delimiter_to_text_type,
+    split_nodes_delimiter,
     split_nodes_image,
     split_nodes_link,
 )
@@ -39,8 +39,8 @@ def text_to_text_nodes(text: str) -> list[TextNode]:
     if text == "":
         raise ValueError("Text can't be empty")
     nodes = [TextNode(text, TextType.NORMAL)]
-    for delimeter, text_type in get_delimeter_to_text_type().items():
-        nodes = split_nodes_delimeter(nodes, text_type, delimeter)
+    for delimiter, text_type in get_delimiter_to_text_type().items():
+        nodes = split_nodes_delimiter(nodes, text_type, delimiter)
     for split in [split_nodes_image, split_nodes_link]:
         nodes = split(nodes)
     return nodes

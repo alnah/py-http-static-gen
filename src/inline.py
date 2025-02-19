@@ -4,7 +4,7 @@ from typing import Callable, Optional
 from textnode import TextNode, TextType
 
 
-def get_delimeter_to_text_type() -> dict[str, TextType]:
+def get_delimiter_to_text_type() -> dict[str, TextType]:
     return {
         "": TextType.NORMAL,
         "**": TextType.BOLD,
@@ -14,13 +14,13 @@ def get_delimeter_to_text_type() -> dict[str, TextType]:
     }
 
 
-def split_nodes_delimeter(
+def split_nodes_delimiter(
     old_nodes: list[TextNode],
     text_type: TextType,
     delimiter: Optional[str] = None,
 ) -> list[TextNode]:
     delimiter = delimiter if delimiter else ""
-    valid_map = get_delimeter_to_text_type()
+    valid_map = get_delimiter_to_text_type()
     if text_type not in valid_map.values():
         raise ValueError(
             f"TextType must be one of {set(valid_map.values())}, got: '{text_type}'"
