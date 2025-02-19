@@ -11,6 +11,13 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(html_node.children, [])
         self.assertEqual(html_node.props, {})
 
+    def test__eq__(self):
+        html_node1 = HTMLNode()
+        html_node2 = HTMLNode("p", "test", [], {"id": "p1"})
+        self.assertTrue(html_node1 == html_node1)
+        self.assertTrue(html_node2 == html_node2)
+        self.assertFalse(html_node1 == html_node2)
+
     def test__repr__(self):
         html_node = HTMLNode(
             tag="a",

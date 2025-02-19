@@ -14,6 +14,16 @@ class HTMLNode:
         self.children = children if children is not None else []
         self.props = props if props is not None else {}
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, HTMLNode):
+            return NotImplemented
+        return (
+            self.tag == other.tag
+            and self.value == other.value
+            and self.children == other.children
+            and self.props == other.props
+        )
+
     def __repr__(self) -> str:
         return f"HTMLNode(tag={self.tag!r}, value={self.value!r}, children={self.children!r}, props={self.props!r})"
 
