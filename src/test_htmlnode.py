@@ -11,12 +11,41 @@ class TestHTMLNode(unittest.TestCase):
         self.assertEqual(html_node.children, [])
         self.assertEqual(html_node.props, {})
 
-    def test__eq__(self):
-        html_node1 = HTMLNode()
-        html_node2 = HTMLNode("p", "test", [], {"id": "p1"})
-        self.assertTrue(html_node1 == html_node1)
-        self.assertTrue(html_node2 == html_node2)
-        self.assertFalse(html_node1 == html_node2)
+    def test__eq__eq_html_node(self):
+        html_node1 = HTMLNode(
+            tag="div",
+            value="test",
+            children=[],
+            props={"id": "div1"},
+        )
+        html_node2 = HTMLNode(
+            tag="div",
+            value="test",
+            children=[],
+            props={"id": "div1"},
+        )
+        self.assertEqual(html_node1, html_node2)
+
+    def test__eq__not_eq_tag(self):
+        html_node1 = HTMLNode(tag="p", value="test")
+        html_node2 = HTMLNode(tag="div", value="test")
+        self.assertNotEqual(html_node1, html_node2)
+
+    def test__eq__not_eq_value(self):
+        html_node1 = HTMLNode(value="test")
+        html_node2 = HTMLNode(value="diff")
+        self.assertNotEqual(html_node1, html_node2)
+
+    def test__eq__not_eq_children(self):
+        child_html_node = HTMLNode(tag="span")
+        html_node1 = HTMLNode(children=[child_html_node])
+        html_node2 = HTMLNode(children=[])
+        self.assertNotEqual(html_node1, html_node2)
+
+    def test__eq__not_eq_props(self):
+        html_node1 = HTMLNode(props={"href": "https://test.com"})
+        html_node2 = HTMLNode(props={"src": "test.jpg"})
+        self.assertNotEqual(html_node1, html_node2)
 
     def test__repr__(self):
         html_node = HTMLNode(
