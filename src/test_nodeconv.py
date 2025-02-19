@@ -9,22 +9,22 @@ class TestTextToLeafNode(unittest.TestCase):
     def test_normal_text_type(self):
         want = LeafNode(value="normal")
         got = text_to_leaf_node(TextNode(text="normal", text_type=TextType.NORMAL))
-        self.assertEqual(repr(want), repr(got))
+        self.assertEqual(want, got)
 
     def test_bold_text_type(self):
         want = LeafNode(value="bold", tag="b")
         got = text_to_leaf_node(TextNode(text="bold", text_type=TextType.BOLD))
-        self.assertEqual(repr(want), repr(got))
+        self.assertEqual(want, got)
 
     def test_italic_text_type(self):
         want = LeafNode(value="italic", tag="i")
         got = text_to_leaf_node(TextNode(text="italic", text_type=TextType.ITALIC))
-        self.assertEqual(repr(want), repr(got))
+        self.assertEqual(want, got)
 
     def test_code_text_type(self):
         want = LeafNode(value="code", tag="code")
         got = text_to_leaf_node(TextNode(text="code", text_type=TextType.CODE))
-        self.assertEqual(repr(want), repr(got))
+        self.assertEqual(want, got)
 
     def test_link_text_type(self):
         want = LeafNode(
@@ -39,7 +39,7 @@ class TestTextToLeafNode(unittest.TestCase):
                 url="https://github.com/alnah/py-http-static-gen",
             )
         )
-        self.assertEqual(repr(want), repr(got))
+        self.assertEqual(want, got)
 
     def test_image_text_type(self):
         want = LeafNode(
@@ -57,7 +57,7 @@ class TestTextToLeafNode(unittest.TestCase):
                 url="https://github.com/alnah/py-http-static-gen",
             )
         )
-        self.assertEqual(repr(want), repr(got))
+        self.assertEqual(want, got)
 
 
 class TestTextToTextNodes(unittest.TestCase):
