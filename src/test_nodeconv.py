@@ -1,11 +1,11 @@
 import unittest
 
 from htmlnode import LeafNode
-from nodeconv import text_to_leaf_node
+from nodeconv import text_to_leaf_node, text_to_text_nodes
 from textnode import TextNode, TextType
 
 
-class TestNodeConv(unittest.TestCase):
+class TestTextToLeafNode(unittest.TestCase):
     def test_normal_text_type(self):
         want = LeafNode(value="normal")
         got = text_to_leaf_node(TextNode(text="normal", text_type=TextType.NORMAL))
@@ -58,6 +58,42 @@ class TestNodeConv(unittest.TestCase):
             )
         )
         self.assertEqual(repr(want), repr(got))
+
+
+class TestTextToTextNodes(unittest.TestCase):
+    def test_with_no_text(self):
+        text = ""
+        with self.assertRaises(ValueError):
+            text_to_text_nodes(text)
+
+    def test_with_text_only(self):
+        text = "This is a normal text"
+        want = [TextNode("This is a normal text", TextType.NORMAL)]
+        got = text_to_text_nodes(text)
+        self.assertEqual(want, got)
+
+    def test_with_all_types(self):
+        text = "This is a normal text, and **bold** text, and *italic* text, and _italic_ text, and `code block`, and ![obi wan image](https://https://i.imgur.com/fJRm4Vk.jpeg), and [link](https://github.com/alnah)"
+        want = [
+            TextNode("This is a normal text, and ", TextType.NORMAL),
+            TextNode("bold", TextType.BOLD),
+            TextNode(" text, and ", TextType.NORMAL),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" text, and ", TextType.NORMAL),
+            TextNode("italic", TextType.ITALIC),
+            TextNode(" text, and ", TextType.NORMAL),
+            TextNode("code block", TextType.CODE),
+            TextNode(", and ", TextType.NORMAL),
+            TextNode(
+                "obi wan image",
+                TextType.IMAGE,
+                "https://https://i.imgur.com/fJRm4Vk.jpeg",
+            ),
+            TextNode(", and ", TextType.NORMAL),
+            TextNode("link", TextType.LINK, "https://github.com/alnah"),
+        ]
+        got = text_to_text_nodes(text)
+        self.assertEqual(want, got)
 
 
 if __name__ == "__main__":
