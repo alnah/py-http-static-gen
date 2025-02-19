@@ -1,12 +1,10 @@
-from nodeconv import text_to_text_nodes
+from nodeconv import markdown_to_blocks
 
 
 def main() -> None:
-    text = "This is a text with **bold**, and *italic*, and _italic_, and `code`\
-, and ![image](https://image.com) and [link](https://link.com)"
-    nodes = text_to_text_nodes(text)
-    for node in nodes:
-        print(node)
+    text = "   whitespaces   \n\n    another whitespaces   \n\n\n hello \n\n\n\n world \n\n"
+    blocks = markdown_to_blocks(text)
+    print(blocks)
 
 
 if __name__ == "__main__":

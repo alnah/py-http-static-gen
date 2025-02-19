@@ -1,7 +1,13 @@
 import unittest
 
 from htmlnode import LeafNode
-from nodeconv import text_to_leaf_node, text_to_text_nodes
+from nodeconv import (
+    BlockType,
+    block_to_block_type,
+    markdown_to_blocks,
+    text_to_leaf_node,
+    text_to_text_nodes,
+)
 from textnode import TextNode, TextType
 
 
@@ -70,7 +76,7 @@ class TestTextToTextNodes(unittest.TestCase):
         text = "This is a normal text"
         want = [TextNode("This is a normal text", TextType.NORMAL)]
         got = text_to_text_nodes(text)
-        self.assertEqual(want, got)
+        self.assertListEqual(want, got)
 
     def test_with_all_types(self):
         text = "This is a normal text, and **bold** text, and *italic* text, and _italic_ text, and `code block`, and ![obi wan image](https://https://i.imgur.com/fJRm4Vk.jpeg), and [link](https://github.com/alnah)"
@@ -93,7 +99,139 @@ class TestTextToTextNodes(unittest.TestCase):
             TextNode("link", TextType.LINK, "https://github.com/alnah"),
         ]
         got = text_to_text_nodes(text)
-        self.assertEqual(want, got)
+        self.assertListEqual(want, got)
+
+
+class TestMarkdownToBlocks(unittest.TestCase):
+    def test_empty_text(self):
+        text = ""
+        with self.assertRaises(ValueError):
+            markdown_to_blocks(text)
+
+    def test_nice_formatted_text(self):
+        text = """# This is a heading
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.
+
+* This is the first list item in a list block
+* This is a list item
+* This is another list item"""
+        want = [
+            "# This is a heading",
+            "This is a paragraph of text. It has some **bold** and *italic* words inside of it.",
+            """* This is the first list item in a list block
+* This is a list item
+* This is another list item""",
+        ]
+        got = markdown_to_blocks(text)
+        self.assertListEqual(want, got)
+
+    def test_remove_block_trailing_whitespaces(self):
+        text = """   # This is a heading
+
+   This is a paragraph of text. It has some **bold** and *italic* words inside of it.     
+
+   * This is the first list item in a list block
+   * This is a list item
+   * This is another list item   """
+        want = [
+            "# This is a heading",
+            "This is a paragraph of text. It has some **bold** and *italic* words inside of it.",
+            """* This is the first list item in a list block
+   * This is a list item
+   * This is another list item""",
+        ]
+        got = markdown_to_blocks(text)
+        self.maxDiff = None
+        self.assertListEqual(want, got)
+
+    def test_remove_excessive_newlines(self):
+        text = """# This is a heading
+
+
+This is a paragraph of text. It has some **bold** and *italic* words inside of it.     
+
+
+
+
+* This is the first list item in a list block
+* This is a list item
+* This is another list item
+
+
+
+"""
+        want = [
+            "# This is a heading",
+            "This is a paragraph of text. It has some **bold** and *italic* words inside of it.",
+            """* This is the first list item in a list block
+* This is a list item
+* This is another list item""",
+        ]
+        got = markdown_to_blocks(text)
+        self.maxDiff = None
+        self.assertListEqual(want, got)
+
+
+class TestBlockToBlockType(unittest.TestCase):
+    def test_empty_text(self):
+        text = ""
+        with self.assertRaises(ValueError):
+            block_to_block_type(text)
+
+    def test_paragraph(self):
+        text = "This is a paragraph"
+        self.assertEqual(block_to_block_type(text), BlockType.PARAGRAPH)
+
+    def test_h1(self):
+        text = "# Heading 1"
+        self.assertEqual(block_to_block_type(text), BlockType.HEADING)
+
+    def test_h2(self):
+        text = "## Heading 2"
+        self.assertEqual(block_to_block_type(text), BlockType.HEADING)
+
+    def test_h3(self):
+        text = "### Heading 3"
+        self.assertEqual(block_to_block_type(text), BlockType.HEADING)
+
+    def test_h4(self):
+        text = "#### Heading 4"
+        self.assertEqual(block_to_block_type(text), BlockType.HEADING)
+
+    def test_h5(self):
+        text = "##### Heading 5"
+        self.assertEqual(block_to_block_type(text), BlockType.HEADING)
+
+    def test_h6(self):
+        text = "###### Heading 6"
+        self.assertEqual(block_to_block_type(text), BlockType.HEADING)
+
+    def test_code(self):
+        text = """```python
+print("Hello, World!")
+```"""
+        self.assertEqual(block_to_block_type(text), BlockType.CODE)
+
+    def test_quote(self):
+        text = "> quote"
+        self.assertEqual(block_to_block_type(text), BlockType.QUOTE)
+
+    def test_unordered_list(self):
+        text1 = """* unordered list
+* unordered list
+* unordered list"""
+        text2 = """* unordered list
+* unordered list
+* unordered list"""
+        for t in [text1, text2]:
+            self.assertEqual(block_to_block_type(t), BlockType.UNORDERED_LIST)
+
+    def test_ordered_list(self):
+        text = """1. ordered list
+2. ordered list
+3. ordered list"""
+        self.assertEqual(block_to_block_type(text), BlockType.ORDERED_LIST)
 
 
 if __name__ == "__main__":
