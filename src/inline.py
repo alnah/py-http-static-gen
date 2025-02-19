@@ -1,5 +1,5 @@
 import re
-from typing import Optional, Callable
+from typing import Callable, Optional
 
 from textnode import TextNode, TextType
 
