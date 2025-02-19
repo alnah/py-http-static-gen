@@ -1,4 +1,4 @@
-from nodeconv import markdown_to_blocks
+from converter import markdown_to_blocks
 
 
 def main() -> None:
