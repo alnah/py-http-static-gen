@@ -81,3 +81,7 @@ class TestTextNode(unittest.TestCase):
         want = "TextNode(text='test', text_type=<TextType.NORMAL: 0>, url='')"
         got = repr(text_node)
         self.assertEqual(want, got)
+
+
+if __name__ == "__main__":
+    unittest.main()

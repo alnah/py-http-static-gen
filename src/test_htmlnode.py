@@ -32,9 +32,8 @@ class TestHTMLNode(unittest.TestCase):
 
     def test__to_html_placeholder(self):
         html_node = HTMLNode()
-        with self.assertRaises(NotImplementedError) as ctx:
+        with self.assertRaises(NotImplementedError):
             html_node.to_html()
-            self.assertEqual(ctx.exception, "Child classes will override this method")
 
     def test_props_to_html(self):
         html_node = HTMLNode(
@@ -145,3 +144,7 @@ class TestParentNode(unittest.TestCase):
         )
         got = parent_node.to_html()
         self.assertEqual(want, got)
+
+
+if __name__ == "__main__":
+    unittest.main()
