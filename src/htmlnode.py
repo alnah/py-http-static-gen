@@ -65,9 +65,8 @@ class ParentNode(HTMLNode):
             if isinstance(node, LeafNode):
                 return node.to_html()
             elif isinstance(node, ParentNode):
-                children_html = "".join(
-                    recursive_to_html(child) for child in node.children
-                )
+                children = node.children
+                children_html = "".join(recursive_to_html(child) for child in children)
                 return f"<{node.tag}{node.props_to_html()}>{children_html}</{node.tag}>"
             else:
                 return ""
