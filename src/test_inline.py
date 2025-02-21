@@ -95,19 +95,18 @@ class TestSplitNodesDelimeter(unittest.TestCase):
 
 class TestExtractLinks(unittest.TestCase):
     def test_extract_markdown_images(self):
-        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
-        want = [
-            ("rick roll", "https://i.imgur.com/aKaOqIh.gif"),
-            ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg"),
-        ]
+        text = "This is text with a ![gif](https://image.gif), \
+and ![image](https://image.jpeg)"
+        want = [("gif", "https://image.gif"), ("image", "https://image.jpeg")]
         got = extract_markdown_images(text)
         self.assertListEqual(want, got)
 
     def test_extract_markdown_links(self):
-        text = "This is text with a link [to my github](https://github.com/alnah) and [to the repo](https://github.com/alnah/py-http-static-gen)"
+        text = "This is text with a link [link](https://test.com), \
+and [link 2](https://test.com/test)"
         want = [
-            ("to my github", "https://github.com/alnah"),
-            ("to the repo", "https://github.com/alnah/py-http-static-gen"),
+            ("link", "https://test.com"),
+            ("link 2", "https://test.com/test"),
         ]
         got = extract_markdown_links(text)
         self.assertListEqual(want, got)
@@ -116,38 +115,32 @@ class TestExtractLinks(unittest.TestCase):
 class TestSplitNodesLink(unittest.TestCase):
     def test_text_with_many_links(self):
         text_node = TextNode(
-            text="This is text with a link [to my github](https://github.com/alnah) and [to my repo](https://github.com/alnah/py-http-static-gen)",
+            text="This is text with a link [link](https://test.com), \
+and [link 2](https://test.com/test)",
             text_type=TextType.NORMAL,
         )
         want = [
             TextNode("This is text with a link ", TextType.NORMAL),
-            TextNode("to my github", TextType.LINK, "https://github.com/alnah"),
-            TextNode(" and ", TextType.NORMAL),
-            TextNode(
-                "to my repo",
-                TextType.LINK,
-                "https://github.com/alnah/py-http-static-gen",
-            ),
+            TextNode("link", TextType.LINK, "https://test.com"),
+            TextNode(", and ", TextType.NORMAL),
+            TextNode("link 2", TextType.LINK, "https://test.com/test"),
         ]
         got = split_nodes_link([text_node])
         self.assertListEqual(want, got)
 
     def test_text_with_many_types_and_links(self):
         text_node = TextNode(
-            text="This is a text, and **bold** with a link [to my github](https://github.com/alnah) and [to my repo](https://github.com/alnah/py-http-static-gen)",
+            text="This is a text, and **bold** with a link [link](https://test.com), \
+and [link 2](https://test.com/test)",
             text_type=TextType.NORMAL,
         )
         want = [
             TextNode("This is a text, and ", TextType.NORMAL),
             TextNode("bold", TextType.BOLD),
             TextNode(" with a link ", TextType.NORMAL),
-            TextNode("to my github", TextType.LINK, "https://github.com/alnah"),
-            TextNode(" and ", TextType.NORMAL),
-            TextNode(
-                "to my repo",
-                TextType.LINK,
-                "https://github.com/alnah/py-http-static-gen",
-            ),
+            TextNode("link", TextType.LINK, "https://test.com"),
+            TextNode(", and ", TextType.NORMAL),
+            TextNode("link 2", TextType.LINK, "https://test.com/test"),
         ]
         with_bold = split_nodes_delimiter([text_node], TextType.BOLD, "**")
         got = split_nodes_link(with_bold)
@@ -164,15 +157,15 @@ class TestSplitNodesLink(unittest.TestCase):
 
     def test_text_only_with_links(self):
         text_node = TextNode(
-            text="[to my github](https://github.com/alnah)[to my repo](https://github.com/alnah/py-http-static-gen)",
+            text="[link](https://test.com)[link 2](https://test.com/test)",
             text_type=TextType.NORMAL,
         )
         want = [
-            TextNode("to my github", TextType.LINK, "https://github.com/alnah"),
+            TextNode("link", TextType.LINK, "https://test.com"),
             TextNode(
-                "to my repo",
+                "link 2",
                 TextType.LINK,
-                "https://github.com/alnah/py-http-static-gen",
+                "https://test.com/test",
             ),
         ]
         got = split_nodes_link([text_node])
@@ -182,30 +175,32 @@ class TestSplitNodesLink(unittest.TestCase):
 class TestSplitNodesImage(unittest.TestCase):
     def test_text_with_many_images(self):
         text_node = TextNode(
-            text="This is text with an image ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)",
+            text="This is text with an image ![gif](https://image.gif), \
+and ![image](https://image.jpeg)",
             text_type=TextType.NORMAL,
         )
         want = [
             TextNode("This is text with an image ", TextType.NORMAL),
-            TextNode("rick roll", TextType.IMAGE, "https://i.imgur.com/aKaOqIh.gif"),
-            TextNode(" and ", TextType.NORMAL),
-            TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode("gif", TextType.IMAGE, "https://image.gif"),
+            TextNode(", and ", TextType.NORMAL),
+            TextNode("image", TextType.IMAGE, "https://image.jpeg"),
         ]
         got = split_nodes_image([text_node])
         self.assertListEqual(want, got)
 
     def test_text_with_many_types_and_images(self):
         text_node = TextNode(
-            text="This is a text, and **bold** with an image ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)",
+            text="This is a text, and **bold** with an image \
+![gif](https://image.gif), and ![image](https://image.jpeg)",
             text_type=TextType.NORMAL,
         )
         want = [
             TextNode("This is a text, and ", TextType.NORMAL),
             TextNode("bold", TextType.BOLD),
             TextNode(" with an image ", TextType.NORMAL),
-            TextNode("rick roll", TextType.IMAGE, "https://i.imgur.com/aKaOqIh.gif"),
-            TextNode(" and ", TextType.NORMAL),
-            TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode("gif", TextType.IMAGE, "https://image.gif"),
+            TextNode(", and ", TextType.NORMAL),
+            TextNode("image", TextType.IMAGE, "https://image.jpeg"),
         ]
         with_bold = split_nodes_delimiter([text_node], TextType.BOLD, "**")
         got = split_nodes_image(with_bold)
@@ -222,12 +217,12 @@ class TestSplitNodesImage(unittest.TestCase):
 
     def test_text_only_with_images(self):
         text_node = TextNode(
-            text="![rick roll](https://i.imgur.com/aKaOqIh.gif)![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)",
+            text="![gif](https://image.gif)![image](https://image.jpeg)",
             text_type=TextType.NORMAL,
         )
         want = [
-            TextNode("rick roll", TextType.IMAGE, "https://i.imgur.com/aKaOqIh.gif"),
-            TextNode("obi wan", TextType.IMAGE, "https://i.imgur.com/fJRm4Vk.jpeg"),
+            TextNode("gif", TextType.IMAGE, "https://image.gif"),
+            TextNode("image", TextType.IMAGE, "https://image.jpeg"),
         ]
         got = split_nodes_image([text_node])
         self.assertListEqual(want, got)
