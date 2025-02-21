@@ -3,39 +3,36 @@ PIP=$(ENV)/bin/pip
 RUFF=$(ENV)/bin/ruff
 PYRIGHT=$(ENV)/bin/pyright
 
-.PHONY: env install install-dev lsp fmt lintfix test run check
+.PHONY: default run env install-dev check test fmt lintfix lsp
 
-default: check 
-check: lsp fmt test
+default: run
+
+check: env install-dev lsp fmt test
 
 env:
 	$(info 🌍 ACTIVATING ENVIRONMENT...)
-	python -m venv $(ENV)
+	@if [ ! -d "$(ENV)" ]; then python -m venv $(ENV); fi
 
-install:
-	$(info 📥 DOWNLOADING DEPENDENCIES...)
-	$(PIP) install -r requirements.txt
-
-install-dev:
+install-dev: env
 	$(info 📥 DOWNLOADING DEPENDENCIES...)
 	$(PIP) install -r requirements_dev.txt
 
-lsp:
+lsp: env
 	$(info 🛠️ CHECKING STATIC TYPES...)
 	$(PYRIGHT)
-	
-lintfix:
+
+lintfix: env
 	$(info 🔍 RUNNING LINT TOOLS...)
 	$(RUFF) check --select I --fix
 
-fmt: lintfix
+fmt: env
 	$(info ✨ CHECKING CODE FORMATTING...)
 	$(RUFF) format
 
-test:
+test: env
 	$(info 🧪 TESTING...)
-	./test.sh
+	python -m unittest discover -s src
 
 run:
-	$(info 🚀 RUNNING...)
-	./main.sh
+	$(info 🚀 RUNNING APP...)
+	python3 src/main.py && cd public && python -m http.server 8888
