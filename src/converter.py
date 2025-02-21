@@ -2,7 +2,7 @@ import re
 from enum import Enum
 from typing import Callable
 
-from htmlnode import LeafNode, HTMLNode, ParentNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 from inline import (
     DELIMITER_TO_TEXT_TYPE_MAP,
     split_nodes_delimiter,
