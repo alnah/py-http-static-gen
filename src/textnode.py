@@ -38,7 +38,3 @@ class TextNode:
 
     def __repr__(self):
         return f"TextNode(text={self.text!r}, text_type={self.text_type!r}, url={self.url!r})"
-
-
-if __name__ == "__main__":
-    unittest.main()
