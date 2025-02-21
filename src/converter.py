@@ -69,10 +69,10 @@ def validate_markdown_text(text: str) -> None:
 def inline_text_to_text_nodes(text: str) -> list[TextNode]:
     validate_block_text(text)
     nodes = [TextNode(text, TextType.NORMAL)]
-    for delimiter, text_type in DELIMITER_TO_TEXT_TYPE_MAP.items():
-        nodes = split_nodes_delimiter(nodes, text_type, delimiter)
     for split in [split_nodes_image, split_nodes_link]:
         nodes = split(nodes)
+    for delimiter, text_type in DELIMITER_TO_TEXT_TYPE_MAP.items():
+        nodes = split_nodes_delimiter(nodes, text_type, delimiter)
     return nodes
 
 
