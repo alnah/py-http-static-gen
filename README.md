@@ -6,8 +6,7 @@ This project explores the fundamental mechanics behind popular tools like Jekyll
 
 ## Installation
 
-Before proceeding, ensure that Python is installed on your system and that `usr/local/bin` is included in your system's `$PATH`.
-Then, clone the repository, navigate into it, and run the application:
+Before proceeding, ensure that Python is installed on your system. Then:
 
 ```
 git clone https://github.com/alnah/py-static-site-gen && cd py-static-site-gen
