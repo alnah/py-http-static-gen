@@ -5,10 +5,13 @@ from logger import get_logger
 
 
 class MarkdownTitleError(Exception):
+    """Exception for invalid markdown title."""
+
     pass
 
 
 def extract_title(text: str) -> str:
+    """Extract a level-1 title from markdown content."""
     if not text:
         raise ValueError("Markdown document can't be empty")
 
@@ -25,6 +28,7 @@ def extract_title(text: str) -> str:
 
 
 def read_file(file_path: str) -> str:
+    """Read file content from a given path."""
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Filepath {file_path} doesn't exist")
 
@@ -34,6 +38,7 @@ def read_file(file_path: str) -> str:
 
 
 def write_file(file_path: str, data: str) -> None:
+    """Write data to file, ensuring directory exists."""
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     try:
         with open(file_path, "w", encoding="utf-8") as file:
@@ -43,6 +48,7 @@ def write_file(file_path: str, data: str) -> None:
 
 
 def generate_page(template_path: str, src_path: str, dst_path: str) -> None:
+    """Generate an HTML page from markdown and a template."""
     logger = get_logger()
     try:
         template, markdown = read_file(template_path), read_file(src_path)
@@ -62,6 +68,7 @@ def generate_pages_recursive(
     current_src: str,
     current_dst: str,
 ) -> None:
+    """Recursively generate HTML pages from markdown files."""
     logger = get_logger()
     os.makedirs(current_dst, exist_ok=True)
     for branch in os.listdir(current_src):

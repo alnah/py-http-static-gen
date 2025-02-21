@@ -5,6 +5,7 @@ from logger import get_logger
 
 
 def copy_tree_recursive(current_src: str, current_dst: str) -> None:
+    """Recursively copy files from source to destination directory."""
     logger = get_logger()
     os.makedirs(current_dst, exist_ok=True)
     for branch in os.listdir(current_src):
@@ -18,6 +19,7 @@ def copy_tree_recursive(current_src: str, current_dst: str) -> None:
 
 
 def copytree(src_dir: str, dst_dir: str) -> None:
+    """Copy entire directory tree, removing dst if it exists."""
     logger = get_logger()
 
     if not os.path.exists(src_dir):

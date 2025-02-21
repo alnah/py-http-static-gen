@@ -3,6 +3,7 @@ import sys
 
 
 def get_logger() -> logging.Logger:
+    """Provide a basic logging system displaying info to standard output."""
     logging.basicConfig(
         stream=sys.stdout,
         level=logging.INFO,
