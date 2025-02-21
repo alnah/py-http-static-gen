@@ -86,7 +86,23 @@ def block_text_to_block_type(text: str) -> BlockType:
 
 def markdown_text_to_blocks(text: str) -> list[str]:
     validate_markdown_text(text)
-    return [block.strip("\n").strip() for block in text.split("\n\n") if block]
+    blocks, current_block, inside = [], [], False
+    current_block = []
+
+    for line in text.split("\n"):
+        if line.startswith("```"):
+            current_block.append(line)
+            inside = not inside
+        elif line.strip() == "" and not inside:
+            if current_block:
+                blocks.append("\n".join(current_block).strip())
+                current_block = []
+        else:
+            current_block.append(line)
+
+    if current_block:
+        blocks.append("\n".join(current_block).strip())
+    return blocks
 
 
 def get_parent_node_from_text_nodes(

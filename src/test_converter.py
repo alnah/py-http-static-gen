@@ -174,7 +174,22 @@ It has some **bold** and *italic* words inside of it.",
 * This is another list item""",
         ]
         got = markdown_text_to_blocks(text)
-        self.maxDiff = None
+        self.assertListEqual(want, got)
+
+    def test_fence_marker(self):
+        text = """# This is a heading
+This is a paragraph of text.
+```python
+print("Hello, World!")
+```"""
+        want = [
+            "# This is a heading\n"
+            "This is a paragraph of text.\n"
+            "```python\n"
+            'print("Hello, World!")\n'
+            "```"
+        ]
+        got = markdown_text_to_blocks(text)
         self.assertListEqual(want, got)
 
 
