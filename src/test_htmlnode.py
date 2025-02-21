@@ -58,11 +58,11 @@ class TestHTMLNode(unittest.TestCase):
                 )
             ],
             props={
-                "href": "https://github.com/alnah/py-http-static-gen",
+                "href": "https://test.com/test",
                 "target": "_blank",
             },
         )
-        want = "HTMLNode(tag='a', value='link', children=[HTMLNode(tag='b', value='bold', children=[], props={})], props={'href': 'https://github.com/alnah/py-http-static-gen', 'target': '_blank'})"
+        want = "HTMLNode(tag='a', value='link', children=[HTMLNode(tag='b', value='bold', children=[], props={})], props={'href': 'https://test.com/test', 'target': '_blank'})"
         got = repr(html_node)
         self.assertEqual(want, got)
 
@@ -76,11 +76,11 @@ class TestHTMLNode(unittest.TestCase):
             tag="a",
             value="link",
             props={
-                "href": "https://github.com/alnah/py-http-static-gen",
+                "href": "https://test.com/test",
                 "target": "_blank",
             },
         )
-        want = ' href="https://github.com/alnah/py-http-static-gen" target="_blank"'
+        want = ' href="https://test.com/test" target="_blank"'
         got = html_node.props_to_html()
         self.assertEqual(want, got)
 
@@ -102,16 +102,26 @@ class TestLeafNode(unittest.TestCase):
         self.assertEqual(leaf_node.children, [])
 
     def test_to_html_with_tag_and_props(self):
-        lead_node = LeafNode(
+        leaf_node = LeafNode(
             tag="a",
             value="test",
             props={
-                "href": "https://github.com/alnah/py-http-static-gen",
+                "href": "https://test.com/test",
                 "target": "_blank",
             },
         )
-        want = '<a href="https://github.com/alnah/py-http-static-gen" target="_blank">test</a>'
-        got = lead_node.to_html()
+        want = '<a href="https://test.com/test" target="_blank">test</a>'
+        got = leaf_node.to_html()
+        self.assertEqual(want, got)
+
+    def test_to_html_with_img_self_enclosing_tag(self):
+        leaf_node = LeafNode(
+            tag="img",
+            value="",
+            props={"src": "https://test.com", "alt": "test"},
+        )
+        want = '<img src="https://test.com" alt="test"/>'
+        got = leaf_node.to_html()
         self.assertEqual(want, got)
 
     def test_to_html_without_tag(self):
