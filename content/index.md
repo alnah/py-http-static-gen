@@ -1,10 +1,10 @@
 # Basenji Fan Club
 
-**I like Basenjis**. Read my [first post here](/firstpost) (sorry the link doesn't work yet)
+**I like Basenjis**. Read my [first post here](/subdir) (sorry the link doesn't work yet)
 
 > The barkless wonder.
 
-![A very nice basenji](images/basenji.jpg)
+![A very nice basenji](/images/basenji.jpg)
 
 ## Reasons I like Basenjis
 
