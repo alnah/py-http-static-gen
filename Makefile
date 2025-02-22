@@ -7,7 +7,7 @@ PYRIGHT=$(ENV)/bin/pyright
 
 default: run
 
-check: env install-dev lsp fmt test
+check: env lsp fmt test
 
 env:
 	$(info 🌍 ACTIVATING ENVIRONMENT...)
